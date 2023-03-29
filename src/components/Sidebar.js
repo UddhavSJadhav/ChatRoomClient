@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const Sidebar = ({ friend, setFriend, socket }) => {
+const Sidebar = ({ conversation, setConversation, socket }) => {
   const [conversations, setConversations] = useState([]);
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
@@ -69,7 +69,11 @@ const Sidebar = ({ friend, setFriend, socket }) => {
       <hr />
       <div>
         {conversations.map((convo, i) => (
-          <div key={i} onClick={() => setFriend(convo?.friend?._id)}>
+          <div
+            key={i}
+            onClick={() =>
+              convo?._id === conversation ? {} : setConversation(convo?._id)
+            }>
             <div className='d-flex chat'>
               <div className='profile-img'>
                 <img src='' alt='' width='50' height='50' />

@@ -1,19 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-const Chat = ({ friend, socket }) => {
+const Chat = ({ conversation, socket, auth }) => {
   const [messages, setMessages] = useState([]);
   const textRef = useRef();
-  function getMessages() {
-    if (!friend) return;
-    socket?.emit("get_messages", { friend }, (err, res) => {
-      if (err) toast.error(err?.message);
-      if (res?.messages) setMessages([...res.messages]);
-    });
-  }
+
   useEffect(() => {
+    function getMessages() {
+      if (!conversation) return;
+      socket?.emit("conversation:getmessages", { conversation }, (err, res) => {
+        if (err) toast.error(err?.message);
+        if (res?.data) setMessages([...res.data]);
+      });
+    }
     getMessages();
-  }, [friend]);
+  }, [conversation]);
 
   useEffect(() => {
     socket?.on("receive_message", (data) => {
@@ -28,7 +29,7 @@ const Chat = ({ friend, socket }) => {
     if (textRef.current.value.trim() === "") return;
     socket?.emit(
       "send_message",
-      { friend, text: textRef.current.value },
+      { conversation, text: textRef.current.value },
       (err, res) => {
         if (err) toast.error(err?.message);
         if (res?.data) setMessages((prev) => [...prev, { ...res?.data }]);
@@ -39,15 +40,14 @@ const Chat = ({ friend, socket }) => {
 
   return (
     <div id='chat' className='position-relative'>
-      <div id='chat-name'>Jake Peralta</div>
-      <button onClick={getMessages}>get</button>
+      <div id='chat-name'>Conversation Name</div>
       <hr />
       <div>
         {messages.map((msg, i) => (
           <div key={i} className='w-100'>
             <div
               style={
-                msg.from?.toString() === friend?.toString()
+                msg.from?.toString() !== auth?._id?.toString()
                   ? {
                       width: "80%",
                       maxWidth: "500px",

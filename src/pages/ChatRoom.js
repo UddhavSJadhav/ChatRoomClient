@@ -7,7 +7,7 @@ import useAuth from "../hooks/useAuth.js";
 
 const ChatRoom = () => {
   const { auth } = useAuth();
-  const [friend, setFriend] = useState({});
+  const [conversation, setConversation] = useState({});
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
@@ -34,8 +34,8 @@ const ChatRoom = () => {
 
   return (
     <div className='d-flex'>
-      <Sidebar {...{ friend, setFriend, socket }} />
-      <Chat {...{ friend, socket }} />
+      <Sidebar {...{ conversation, setConversation, socket }} />
+      <Chat {...{ conversation, socket, auth }} />
     </div>
   );
 };
