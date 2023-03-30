@@ -1,24 +1,29 @@
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-const Chat = ({ conversation, socket, auth }) => {
+const Chat = ({ conversation, socket, auth, setLastMessage }) => {
   const [messages, setMessages] = useState([]);
   const textRef = useRef();
 
   useEffect(() => {
     function getMessages() {
-      if (!conversation) return;
-      socket?.emit("conversation:getmessages", { conversation }, (err, res) => {
-        if (err) toast.error(err?.message);
-        if (res?.data) setMessages([...res.data]);
-      });
+      if (!conversation?._id) return;
+      socket?.emit(
+        "conversation:getmessages",
+        { conversation: conversation?._id },
+        (err, res) => {
+          if (err) toast.error(err?.message);
+          if (res?.data) setMessages([...res.data]);
+        }
+      );
     }
     getMessages();
-  }, [conversation]);
+  }, [conversation, socket]);
 
   useEffect(() => {
     socket?.on("receive_message", (data) => {
       setMessages((prev) => [...prev, { ...data }]);
+      setLastMessage(conversation?._id, data);
     });
 
     // Remove event listener on component unmount
@@ -29,10 +34,9 @@ const Chat = ({ conversation, socket, auth }) => {
     if (textRef.current.value.trim() === "") return;
     socket?.emit(
       "send_message",
-      { conversation, text: textRef.current.value },
-      (err, res) => {
+      { conversation: conversation?._id, text: textRef.current.value },
+      (err, _) => {
         if (err) toast.error(err?.message);
-        if (res?.data) setMessages((prev) => [...prev, { ...res?.data }]);
       }
     );
     textRef.current.value = "";
@@ -40,12 +44,15 @@ const Chat = ({ conversation, socket, auth }) => {
 
   return (
     <div id='chat' className='position-relative'>
-      <div id='chat-name'>Conversation Name</div>
+      <div id='chat-name'>
+        {conversation?.name ? conversation?.name : "Select Conversation"}
+      </div>
       <hr />
-      <div>
+      <div id='chat-messages'>
         {messages.map((msg, i) => (
           <div key={i} className='w-100'>
             <div
+              className='p-1'
               style={
                 msg.from?.toString() !== auth?._id?.toString()
                   ? {
@@ -53,6 +60,7 @@ const Chat = ({ conversation, socket, auth }) => {
                       maxWidth: "500px",
                       margin: "10px",
                       backgroundColor: "greenyellow",
+                      borderRadius: "5px",
                     }
                   : {
                       width: "80%",
@@ -60,9 +68,27 @@ const Chat = ({ conversation, socket, auth }) => {
                       textAlign: "end",
                       margin: "10px 10px 10px auto",
                       backgroundColor: "yellow",
+                      borderRadius: "5px",
                     }
               }>
-              {msg.text}
+              <p className='m-0 p-0'> {msg.text}</p>
+              <div style={{ fontSize: "10px", textAlign: "end" }}>
+                <span>
+                  {new Date(msg?.createdAt).toLocaleString("en-IN", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+                {/* {msg.from?.toString() === auth?._id?.toString() &&
+                msg?.seen === true ? (
+                  <span className='ms-3 text-success'>seen</span>
+                ) : (
+                  <span className='ms-3 text-grey'>sent</span>
+                )} */}
+              </div>
             </div>
           </div>
         ))}

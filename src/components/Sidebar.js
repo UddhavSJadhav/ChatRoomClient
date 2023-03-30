@@ -1,14 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const Sidebar = ({ conversation, setConversation, socket }) => {
-  const [conversations, setConversations] = useState([]);
+const Sidebar = ({
+  conversation,
+  setConversation,
+  socket,
+  auth,
+  conversations,
+  setConversations,
+}) => {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    socket?.on("conversation:new_chat", () => {});
-  }, [socket]);
+    socket?.on("conversation:new_chat", (data) => {
+      const oldUsers = users?.filter(
+        (e) => e?._id?.toString !== data?._id?.toString()
+      );
+      setUsers([data, ...oldUsers]);
+    });
+  }, [socket, users]);
 
   useEffect(() => {
     function getFriends() {
@@ -71,16 +82,50 @@ const Sidebar = ({ conversation, setConversation, socket }) => {
         {conversations.map((convo, i) => (
           <div
             key={i}
-            onClick={() =>
-              convo?._id === conversation ? {} : setConversation(convo?._id)
-            }>
+            onClick={() => {
+              if (convo?._id === conversation?._id) return;
+              if (conversation?._id)
+                socket?.emit("room:leave", conversation?._id);
+              setConversation({
+                _id: convo?._id,
+                name: convo?.friend?.name,
+              });
+            }}>
             <div className='d-flex chat'>
               <div className='profile-img'>
-                <img src='' alt='' width='50' height='50' />
+                {convo?.url ? (
+                  <img src={convo?.url} alt='' width='50' height='50' />
+                ) : (
+                  <div
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      backgroundColor: "#f2f2f2",
+                      color: "#aaa",
+                      fontSize: "30px",
+                      borderRadius: "50%",
+                    }}>
+                    {convo?.friend?.name?.charAt(0)?.toUpperCase()}
+                  </div>
+                )}
               </div>
               <div className='profile-name-msg'>
                 <h6>{convo?.friend?.name}</h6>
-                <p>{convo?.text}</p>
+                <div
+                  style={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    width: "100%",
+                  }}>
+                  {auth?._id?.toString() === convo?.message?.from?.toString()
+                    ? "🢀 "
+                    : "🢂 "}
+                  {convo?.message?.text}
+                </div>
               </div>
             </div>
             <hr />

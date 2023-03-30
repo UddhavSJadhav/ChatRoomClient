@@ -1,14 +1,14 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api/v1";
+import { API } from "./API.js";
 
 export const axiosNew = axios.create({
-  baseURL: API,
+  baseURL: API + "/api/v1",
   withCredentials: true,
 });
 
 export const axiosPrivate = axios.create({
-  baseURL: API,
+  baseURL: API + "/api/v1",
   withCredentials: true,
   headers: {
     "Content-type": "application/json",
