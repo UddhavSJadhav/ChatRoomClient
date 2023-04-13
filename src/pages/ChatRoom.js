@@ -41,21 +41,16 @@ const ChatRoom = () => {
     });
   }, [socket, setAuth]);
 
-  const setLastMessage = (convoid, message) => {
-    setConversations((prev) => {
-      console.log(prev);
-      const oldConvo = prev.find(
-        (e) => e?._id?.toString() === convoid?.toString()
-      );
-      console.log(oldConvo);
-      const oldUsers = prev.filter(
-        (e) => e?._id?.toString() !== convoid?.toString()
-      );
-      console.log(oldUsers);
-      console.log([{ ...oldConvo, message }, ...oldUsers]);
-      return [{ ...oldConvo, message }, ...oldUsers];
-    });
-  };
+  function setLastMessage(convoid, message) {
+    const oldConvo = conversations.find(
+      (e) => e?._id?.toString() === convoid?.toString()
+    );
+    console.log(oldConvo);
+    const oldUsers = conversations.filter(
+      (e) => e?._id?.toString() !== convoid?.toString()
+    );
+    setConversations([{ ...oldConvo, message }, ...oldUsers]);
+  }
 
   return (
     <div className='d-flex'>

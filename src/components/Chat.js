@@ -4,6 +4,14 @@ import { toast } from "react-toastify";
 const Chat = ({ conversation, socket, auth, setLastMessage }) => {
   const [messages, setMessages] = useState([]);
   const textRef = useRef();
+  const divRef = useRef(null);
+
+  useEffect(() => {
+    (() => {
+      const div = divRef.current;
+      div.scrollTop = div.scrollHeight;
+    })();
+  }, [messages]);
 
   useEffect(() => {
     function getMessages() {
@@ -48,7 +56,7 @@ const Chat = ({ conversation, socket, auth, setLastMessage }) => {
         {conversation?.name ? conversation?.name : "Select Conversation"}
       </div>
       <hr />
-      <div id='chat-messages'>
+      <div ref={divRef} id='chat-messages'>
         {messages.map((msg, i) => (
           <div key={i} className='w-100'>
             <div
