@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const Sidebar = ({
-  conversation,
-  setConversation,
-  socket,
-  auth,
-  conversations,
-  setConversations,
-}) => {
+const Sidebar = ({ conversation, setConversation, socket, auth }) => {
+  const [conversations, setConversations] = useState([]);
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
 
@@ -20,6 +14,27 @@ const Sidebar = ({
       setUsers([data, ...oldUsers]);
     });
   }, [socket, users]);
+
+  useEffect(() => {
+    socket?.on("sidebar_message", (message) => {
+      setConversations((prev) => {
+        let oldConvo = prev.find(
+          (e) => e?._id?.toString() === message?.conversation?.toString()
+        );
+        if (
+          conversation?._id?.toString() === message?.conversation?.toString()
+        ) {
+          oldConvo.message = { ...message, seen: true };
+        } else {
+          oldConvo.message = message;
+        }
+        const oldUsers = prev.filter(
+          (e) => e?._id?.toString() !== message?.conversation?.toString()
+        );
+        return [oldConvo, ...oldUsers];
+      });
+    });
+  }, [socket]);
 
   useEffect(() => {
     function getFriends() {
@@ -47,6 +62,21 @@ const Sidebar = ({
       if (res?.data) setConversations((prev) => [res?.data, ...prev]);
     });
     setSearch("");
+  }
+
+  function selectConversation(convo, i) {
+    if (convo?._id === conversation?._id) return;
+    if (conversation?._id) socket?.emit("room:leave", conversation?._id);
+    setConversation({
+      _id: convo?._id,
+      name: convo?.friend?.name,
+    });
+    if (convo?.message?.seen === false) {
+      setConversations((prev) => {
+        prev[i].message.seen = true;
+        return prev;
+      });
+    }
   }
 
   return (
@@ -80,17 +110,7 @@ const Sidebar = ({
       <hr />
       <div>
         {conversations.map((convo, i) => (
-          <div
-            key={i}
-            onClick={() => {
-              if (convo?._id === conversation?._id) return;
-              if (conversation?._id)
-                socket?.emit("room:leave", conversation?._id);
-              setConversation({
-                _id: convo?._id,
-                name: convo?.friend?.name,
-              });
-            }}>
+          <div key={i} onClick={() => selectConversation(convo, i)}>
             <div className='d-flex chat'>
               <div className='profile-img'>
                 {convo?.url ? (
@@ -124,7 +144,16 @@ const Sidebar = ({
                   {auth?._id?.toString() === convo?.message?.from?.toString()
                     ? "🢀 "
                     : "🢂 "}
-                  {convo?.message?.text}
+                  <span
+                    className={
+                      convo?._id !== conversation?._id &&
+                      convo?.message?.seen === false &&
+                      auth?._id?.toString() !== convo?.message?.from?.toString()
+                        ? "fw-bold"
+                        : ""
+                    }>
+                    {convo?.message?.text}
+                  </span>
                 </div>
               </div>
             </div>

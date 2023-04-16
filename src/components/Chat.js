@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-const Chat = ({ conversation, socket, auth, setLastMessage }) => {
+const Chat = ({ conversation, socket, auth }) => {
   const [messages, setMessages] = useState([]);
   const textRef = useRef();
   const divRef = useRef(null);
@@ -31,7 +31,6 @@ const Chat = ({ conversation, socket, auth, setLastMessage }) => {
   useEffect(() => {
     socket?.on("receive_message", (data) => {
       setMessages((prev) => [...prev, { ...data }]);
-      setLastMessage(conversation?._id, data);
     });
 
     // Remove event listener on component unmount

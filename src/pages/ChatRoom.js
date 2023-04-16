@@ -10,7 +10,6 @@ import useAuth from "../hooks/useAuth.js";
 const ChatRoom = () => {
   const { auth, setAuth } = useAuth();
   const [conversation, setConversation] = useState({});
-  const [conversations, setConversations] = useState([]);
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
@@ -41,17 +40,6 @@ const ChatRoom = () => {
     });
   }, [socket, setAuth]);
 
-  function setLastMessage(convoid, message) {
-    const oldConvo = conversations.find(
-      (e) => e?._id?.toString() === convoid?.toString()
-    );
-    console.log(oldConvo);
-    const oldUsers = conversations.filter(
-      (e) => e?._id?.toString() !== convoid?.toString()
-    );
-    setConversations([{ ...oldConvo, message }, ...oldUsers]);
-  }
-
   return (
     <div className='d-flex'>
       <Sidebar
@@ -60,11 +48,9 @@ const ChatRoom = () => {
           setConversation,
           socket,
           auth,
-          conversations,
-          setConversations,
         }}
       />
-      <Chat {...{ conversation, socket, auth, setLastMessage }} />
+      <Chat {...{ conversation, socket, auth }} />
     </div>
   );
 };
