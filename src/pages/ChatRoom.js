@@ -20,6 +20,7 @@ const ChatRoom = () => {
       query: {
         userId: auth?._id,
       },
+      withCredentials: true,
     });
     setSocket(socketConnection);
     return () => {
