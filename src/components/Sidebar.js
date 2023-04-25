@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const Sidebar = ({ conversation, setConversation, socket, auth }) => {
+const Sidebar = ({ conversation, setConversation, socket, auth, setAuth }) => {
   const [conversations, setConversations] = useState([]);
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
     socket?.on("conversation:new_chat", (data) => {
-      const oldUsers = users?.filter(
-        (e) => e?._id?.toString !== data?._id?.toString()
-      );
-      setUsers([data, ...oldUsers]);
+      setConversations((prev) => {
+        const oldUsers = prev?.filter(
+          (e) => e?._id?.toString !== data?._id?.toString()
+        );
+        return [data, ...oldUsers];
+      });
     });
-  }, [socket, users]);
+  }, [socket]);
 
   useEffect(() => {
     socket?.on("sidebar_message", (message) => {
@@ -160,6 +162,10 @@ const Sidebar = ({ conversation, setConversation, socket, auth }) => {
             <hr />
           </div>
         ))}
+      </div>
+      <div id='options'>
+        <hr />
+        <button onClick={() => setAuth()}>Log out</button>
       </div>
     </div>
   );

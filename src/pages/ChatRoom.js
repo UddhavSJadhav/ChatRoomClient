@@ -49,6 +49,7 @@ const ChatRoom = () => {
           setConversation,
           socket,
           auth,
+          setAuth,
         }}
       />
       <Chat {...{ conversation, socket, auth }} />

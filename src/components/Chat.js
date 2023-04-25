@@ -38,7 +38,7 @@ const Chat = ({ conversation, socket, auth }) => {
   }, [socket]);
 
   function sendText() {
-    if (textRef.current.value.trim() === "") return;
+    if (textRef.current.value.trim() === "" || !conversation?._id) return;
     socket?.emit(
       "send_message",
       { conversation: conversation?._id, text: textRef.current.value },

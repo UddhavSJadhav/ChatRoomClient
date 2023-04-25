@@ -49,6 +49,22 @@ code {
   width: 100%;
 }
 
+#options{
+  position: fixed;
+  bottom: 0;
+  width:400px;
+}
+
+#options button{
+  width:200px;
+  height: 40px;
+  border-color: transparent;
+  border-radius: 5px;
+  background-color: aqua;
+  color: black;
+  margin: 5px 0 5px 40px;
+}
+
 /*Chat*/
 #chat{
   width:100%;
