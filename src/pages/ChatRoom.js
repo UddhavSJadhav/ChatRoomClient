@@ -11,6 +11,7 @@ const ChatRoom = () => {
   const { auth, setAuth } = useAuth();
   const [conversation, setConversation] = useState({});
   const [socket, setSocket] = useState(null);
+  const [sidebar, setSidebar] = useState(true);
 
   useEffect(() => {
     const socketConnection = io.connect(API, {
@@ -42,7 +43,7 @@ const ChatRoom = () => {
   }, [socket, setAuth]);
 
   return (
-    <div className='d-flex'>
+    <div className='' id='chatroom'>
       <Sidebar
         {...{
           conversation,
@@ -50,9 +51,11 @@ const ChatRoom = () => {
           socket,
           auth,
           setAuth,
+          sidebar,
+          setSidebar,
         }}
       />
-      <Chat {...{ conversation, socket, auth }} />
+      <Chat {...{ conversation, socket, auth, setSidebar }} />
     </div>
   );
 };

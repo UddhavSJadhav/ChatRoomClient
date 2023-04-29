@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-const Chat = ({ conversation, socket, auth }) => {
+const Chat = ({ conversation, socket, auth, setSidebar }) => {
   const [messages, setMessages] = useState([]);
   const textRef = useRef();
   const divRef = useRef(null);
@@ -51,9 +51,17 @@ const Chat = ({ conversation, socket, auth }) => {
 
   return (
     <div id='chat' className='position-relative'>
-      <div id='chat-name'>
-        {conversation?.name ? conversation?.name : "Select Conversation"}
+      <div id='chat-header'>
+        <div className='ham-menu' onClick={() => setSidebar(true)}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div id='chat-name'>
+          {conversation?.name ? conversation?.name : "Select Conversation"}
+        </div>
       </div>
+
       <hr />
       <div ref={divRef} id='chat-messages'>
         {messages.map((msg, i) => (

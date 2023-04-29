@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const Sidebar = ({ conversation, setConversation, socket, auth, setAuth }) => {
+const Sidebar = ({
+  conversation,
+  setConversation,
+  socket,
+  auth,
+  setAuth,
+  sidebar,
+  setSidebar,
+}) => {
   const [conversations, setConversations] = useState([]);
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
@@ -82,8 +90,16 @@ const Sidebar = ({ conversation, setConversation, socket, auth, setAuth }) => {
   }
 
   return (
-    <div id='sidebar'>
-      <div id='header'>ChatRoom</div>
+    <div id='sidebar' className={sidebar ? "sidebar-open" : "sidebar-close"}>
+      <div id='header'>
+        <div>ChatRoom</div>
+        <button
+          id='close'
+          onClick={() => setSidebar(false)}
+          style={sidebar ? { display: "block" } : { display: "none" }}>
+          <span></span>
+        </button>
+      </div>
       <hr />
       <div className='m-1'>
         <input
