@@ -1,4 +1,4 @@
-##ChatRoom using MERN Stack
+## ChatRoom using MERN Stack
 
 Web App: https://chat-room-client-livid.vercel.app/connect
 
