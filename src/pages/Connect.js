@@ -123,6 +123,13 @@ const Connect = () => {
             {toggle ? "Create new account" : "Already has an account"}
           </span>
         </div>
+
+        <hr />
+
+        <div className='alert alert-dark w-100 text-center'>
+          <p className='p-0 m-0'>Server starts when request is made.</p>
+          <p className='p-0 m-0'> First response may take time.</p>
+        </div>
       </form>
     </section>
   );
