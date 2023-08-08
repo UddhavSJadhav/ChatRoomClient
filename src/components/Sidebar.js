@@ -92,41 +92,35 @@ const Sidebar = ({
   return (
     <div id='sidebar' className={sidebar ? "sidebar-open" : "sidebar-close"}>
       <div id='header'>
-        <div>ChatRoom</div>
-        <button
-          id='close'
-          onClick={() => setSidebar(false)}
-          style={sidebar ? { display: "block" } : { display: "none" }}>
-          <span></span>
-        </button>
-      </div>
-      <hr />
-      <div className='m-1'>
-        <input
-          type='search'
-          className='form-control'
-          placeholder='Find Friends...'
-          value={search}
-          onChange={searchUsers}
-        />
-        <div className='position-relative w-100'>
-          <div className='position-absolute'>
-            <div className='w-100'>
-              {search.length > 3 &&
-                users?.map((e) => (
-                  <div
-                    key={e?._id}
-                    className='bg-info mb-1 w-100 text-center'
-                    onClick={() => startConversation(e?._id)}>
-                    {e?.username}
-                  </div>
-                ))}
+        <div>
+          <button id='close' onClick={() => setSidebar(false)}>
+            <span></span>
+          </button>
+        </div>
+        <div className='m-1'>
+          <input
+            type='search'
+            className='form-control'
+            placeholder='Find Friends...'
+            value={search}
+            onChange={searchUsers}
+          />
+          <div className='position-relative w-100'>
+            <div className='position-absolute w-100'>
+              <div className='search-users'>
+                {search.length > 3 &&
+                  users?.map((e) => (
+                    <div key={e?._id} onClick={() => startConversation(e?._id)}>
+                      {e?.username}
+                    </div>
+                  ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
       <hr />
-      <div>
+      <div className='conversations'>
         {conversations.map((convo, i) => (
           <div key={i} onClick={() => selectConversation(convo, i)}>
             <div className='d-flex chat'>
@@ -134,20 +128,7 @@ const Sidebar = ({
                 {convo?.url ? (
                   <img src={convo?.url} alt='' width='50' height='50' />
                 ) : (
-                  <div
-                    style={{
-                      width: "50px",
-                      height: "50px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      backgroundColor: "#f2f2f2",
-                      color: "#aaa",
-                      fontSize: "30px",
-                      borderRadius: "50%",
-                    }}>
-                    {convo?.friend?.name?.charAt(0)?.toUpperCase()}
-                  </div>
+                  <div>{convo?.friend?.name?.charAt(0)?.toUpperCase()}</div>
                 )}
               </div>
               <div className='profile-name-msg'>
@@ -179,9 +160,10 @@ const Sidebar = ({
           </div>
         ))}
       </div>
-      <div id='options'>
-        <hr />
-        <button onClick={() => setAuth()}>Log out</button>
+      <div id='options' className='p-1'>
+        <button id='logout' onClick={() => setAuth({})}>
+          Log out
+        </button>
       </div>
     </div>
   );

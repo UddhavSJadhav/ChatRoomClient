@@ -1,0 +1,56 @@
+#connect {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 64px);
+  min-height: calc(100svh -64px);
+}
+#connect form {
+  padding: 15px;
+  margin: 10px;
+  background-color: white;
+  border-radius: 10px;
+  min-width: 300px;
+  transition: all 1s ease;
+}
+@media (width > 500px) {
+  #connect form {
+    min-width: 350px;
+  }
+}
+#connect .h4 p::after {
+  content: " ";
+  background-color: var(--color-accent);
+  width: 60%;
+  display: block;
+  height: 10px;
+  opacity: 0.5;
+  margin: auto;
+}
+#connect input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--color-primary);
+}
+#connect input:focus {
+  outline: none;
+  border: 1.5px solid var(--color-accent);
+}
+#connect .error {
+  font-size: 11px;
+  color: red;
+  height: 12px;
+}
+#connect button {
+  padding: 8px 12px;
+  background-color: var(--color-accent);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  min-width: 100px;
+}
+#connect span {
+  color: var(--color-accent);
+  text-decoration: underline;
+}

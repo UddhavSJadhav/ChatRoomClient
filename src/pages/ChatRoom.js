@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 
+import "../styles/chatroom.css";
+
 import { API } from "../utils/API.js";
 
 import Sidebar from "../components/Sidebar.js";
@@ -43,7 +45,7 @@ const ChatRoom = () => {
   }, [socket, setAuth]);
 
   return (
-    <div className='' id='chatroom'>
+    <div id='chatroom'>
       <Sidebar
         {...{
           conversation,

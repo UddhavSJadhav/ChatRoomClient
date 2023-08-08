@@ -1,0 +1,8 @@
+nav {
+  min-height: 64px;
+  background-color: var(--color-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}

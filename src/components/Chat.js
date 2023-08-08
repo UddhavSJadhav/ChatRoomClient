@@ -67,24 +67,10 @@ const Chat = ({ conversation, socket, auth, setSidebar }) => {
         {messages.map((msg, i) => (
           <div key={i} className='w-100'>
             <div
-              className='p-1'
-              style={
+              className={
                 msg.from?.toString() !== auth?._id?.toString()
-                  ? {
-                      width: "80%",
-                      maxWidth: "500px",
-                      margin: "10px",
-                      backgroundColor: "greenyellow",
-                      borderRadius: "5px",
-                    }
-                  : {
-                      width: "80%",
-                      maxWidth: "500px",
-                      textAlign: "end",
-                      margin: "10px 10px 10px auto",
-                      backgroundColor: "yellow",
-                      borderRadius: "5px",
-                    }
+                  ? "message"
+                  : "message my"
               }>
               <p className='m-0 p-0'> {msg.text}</p>
               <div style={{ fontSize: "10px", textAlign: "end" }}>
